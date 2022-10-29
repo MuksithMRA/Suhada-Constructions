@@ -1,31 +1,31 @@
 <?php
 
-class EmployeeController{
-    private $employee;
+class VehicleController{
+    private $vehicle;
 
-    public function __construct($employee) {
-        $this->employee = $employee;
+    public function __construct($vehicle) {
+        $this->vehicle = $vehicle;
     }
 
-    public function employee($method , $id)
+    public function vehicle($method , $vehicle_no)
     {
         switch ($method) {
             case 'GET':
-                if($id == null){
-                    $this->getEmployees();
+                if($vehicle_no == null){
+                    $this->getVehicles();
                 }else{
-                    $this->getEmployee($id);
+                    $this->getVehicle($vehicle_no);
                 }
                 break;
             case 'POST':
-                $this->createEmployee();
+                $this->createVehicle();
                 break;
             case 'PUT':
-                $this->updateEmployee();
+                $this->updateVehicle();
                 break;
             case 'DELETE':
-                if($id != null){
-                    $this->deleteEmployee($id);
+                if($vehicle_no != null){
+                    $this->deleteVehicle($vehicle_no);
                     break;
                 }   
             default:
@@ -35,100 +35,119 @@ class EmployeeController{
         }
     }
 
-    //get single employee
-    public function getEmployee($id)
+    //get single vehicle
+    public function getVehicle($vehicle_no)
     {
-        $employeeData = $this->employee->getEmployee($id);
-        if($employeeData != false){
-            echo json_encode(array($employeeData , "response"=>$this->employee->message));
+        $vehicleData = $this->vehicle->getVehicle($vehicle_no);
+        if($vehicleData != false){
+            echo json_encode(array($vehicleData , "response"=>$this->vehicle->message));
         }else{
             http_response_code(404);
-            echo json_encode(array('response' => $this->employee->message));
+            echo json_encode(array('response' => $this->vehicle->message));
         }
     }
 
-    //update employee
-    public function updateEmployee(){
+    //update vehicle
+    public function updateVehicle(){
         $data = json_decode(file_get_contents("php://input"));
-        if($data->id == null){
+        if($data->vehicle_no == null){
             http_response_code(404);
-            echo json_encode(array('response' => 'Employee id is required'));
+            echo json_encode(array('response' => 'Vehicle no is required'));
             die;
         }
-        $this->employee->getEmployee($data->id);
-        $this->employee->id = $data->id;
-        if(isset($data->name)){
-            $this->employee->name = $data->name;
+        $this->vehicle->getVehicle($data->vehicle_no);
+        $this->vehicle->vehicle_no = $data->vehicle_no;
+        if(isset($data->vehicle_class)){
+            $this->vehicle->vehicle_class = $data->vehicle_class;
         }
-        if(isset($data->designation)){
-            $this->employee->designation = $data->designation;
+        if(isset($data->vehicle_owner)){
+            $this->vehicle->vehicle_owner = $data->vehicle_owner;
         }
-        if(isset($data->contact)){
-            $this->employee->contact = $data->contact;
+        if(isset($data->model)){
+            $this->vehicle->model = $data->model;
+        }
+        if(isset($data->license_expiry)){
+            $this->vehicle->license_expiry = $data->license_expiry;
+        }
+        if(isset($data->license_issued)){
+            $this->vehicle->license_issued = $data->license_issued;
+        }
+        if(isset($data->license_number)){
+            $this->vehicle->license_number = $data->license_number;
         }
         if(isset($data->doc)){
-            $this->employee->doc = $data->doc;
+            $this->vehicle->doc = $data->doc;
         }
 
-        if($this->employee->updateEmployee($data->id)){
+        if($this->vehicle->updateVehicle($data->vehicle_no)){
             http_response_code(200);
             echo json_encode(array(
-                'message' => 'Employee updated successfully',
-                'employee'=>$this->employee->toArray(), 
+                'message' => 'Vehicle updated successfully',
+                'vehicle'=>$this->vehicle->toArray(), 
                 'status' => 200
             ));
         }else{
             http_response_code(404);
-            echo json_encode(array('message' => 'Employee not updated', 'status' => 404));
+            echo json_encode(array('message' => 'Vehicle not updated', 'status' => 404));
         }
     }
 
-    //get all employees
-    public function getEmployees()
+    //get all vehicles
+    public function getVehicles()
     {
-        $employeeData = $this->employee->getEmployees();
-        if($employeeData != false){
-            echo json_encode(array($employeeData , "response"=>$this->employee->message));
+        $vehicleData = $this->vehicle->getVehicles();
+        if($vehicleData != false){
+            echo json_encode(array($vehicleData , "response"=>$this->vehicle->message));
         }else{
             http_response_code(404);
-            echo json_encode(array('response' => $this->employee->message));
+            echo json_encode(array('response' => $this->vehicle->message));
         }
 
     }
 
-    //create employee
-    public function createEmployee()
+    //create vehicle
+    public function createVehicle()
     {
         $data = json_decode(file_get_contents("php://input"));
-        if($data->name == null){
+        if($data->vehicle_class == null){
             http_response_code(404);
-            echo json_encode(array('response' => 'Employee data is required'));
+            echo json_encode(array('response' => 'Vehicle data is required'));
             die;
         }
-        $this->employee->name = $data->name;
-        $this->employee->designation = $data->designation;
-        $this->employee->contact = $data->contact;
-        $this->employee->doc = $data->doc;
-        if($this->employee->createEmployee()){
+        $this->vehicle->vehicle_no = $data->vehicle_no;
+        $this->vehicle->vehicle_class = $data->vehicle_class;
+        $this->vehicle->vehicle_owner = $data->vehicle_owner;
+        $this->vehicle->model = $data->model;
+        $this->vehicle->license_expiry = $data->license_expiry;
+        $this->vehicle->license_issued = $data->license_issued;
+        $this->vehicle->license_number = $data->license_number;
+        $this->vehicle->doc = $data->doc;
+
+        if($this->vehicle->getVehicle($data->vehicle_no) != false){
+            http_response_code(401);
+            echo json_encode(array('response' => 'Vehicle already exists','status' => 401));
+            die;
+        }
+        if($this->vehicle->createVehicle()){
             echo json_encode(array(
-                'response' => $this->employee->message,
-                'employee' => $this->employee->toArray()
+                'response' => $this->vehicle->message,
+                'vehicle' => $this->vehicle->toArray()
             ));
         }else{
-            http_response_code($this->employee->message['status']);
-            echo json_encode(array("response"=>$this->employee->message));
+            http_response_code($this->vehicle->message['status']);
+            echo json_encode(array("response"=>$this->vehicle->message));
         }
     }
 
-    //delete employee
-    public function deleteEmployee($id)
+    //delete vehicle
+    public function deleteVehicle($vehicle_no)
     {
-        if($this->employee->deleteEmployee($id)){
+        if($this->vehicle->deleteVehicle($vehicle_no)){
             http_response_code(200);
-            echo json_encode(array('message' => 'Employee deleted successfully', 'status' => 200));
+            echo json_encode(array('message' => 'Vehicle deleted successfully', 'status' => 200));
         }else{
-            http_response_code(404);
-            echo json_encode(array('message' => 'Employee not deleted', 'status' => 404));
+            http_response_code($this->vehicle->message['status']);
+            echo json_encode(array('message' => $this->vehicle->message['message'], 'status' => $this->vehicle->message['status']));
         }
     }
 }

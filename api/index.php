@@ -48,12 +48,12 @@ $path = $parts[2];
             break;
         case 'vehicles':
             $vehicle = new Vehicle($db);
-            $controller = new VehicleController($project);
+            $controller = new VehicleController($vehicle);
             $controller->vehicle($_SERVER['REQUEST_METHOD'],isset($parts[3]) ? $parts[3] : null);
             break;
         case 'finance':
             $finance = new Finance($db);
-            $controller = new FinanceController($project);
+            $controller = new FinanceController($finance);
             $controller->finance($_SERVER['REQUEST_METHOD'],isset($parts[3]) ? $parts[3] : null);
             break;
         default:

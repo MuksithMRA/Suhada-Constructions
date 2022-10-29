@@ -127,8 +127,8 @@ class EmployeeController{
             http_response_code(200);
             echo json_encode(array('message' => 'Employee deleted successfully', 'status' => 200));
         }else{
-            http_response_code(404);
-            echo json_encode(array('message' => 'Employee not deleted', 'status' => 404));
+            http_response_code($this->employee->message["status"]);
+            echo json_encode(array('message' => $this->employee->message["message"], 'status' => $this->employee->message["status"]));
         }
     }
 }

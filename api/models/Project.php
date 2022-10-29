@@ -106,6 +106,10 @@
 
         // Delete Project
         public function deleteProject($id){
+            if($this->getProject($id) == false){
+                $this->message = array('message' => 'No project associated with this id', 'status' => 404);
+                return false;
+            }
             $query = 'DELETE FROM '.$this->table.' WHERE id = ?';
             $stmt = $this->conn->prepare($query);
             $stmt->bind_param('i', $id);

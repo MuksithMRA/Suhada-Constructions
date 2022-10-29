@@ -127,8 +127,8 @@ class ProjectController{
             http_response_code(200);
             echo json_encode(array('message' => 'Project deleted successfully', 'status' => 200));
         }else{
-            http_response_code(404);
-            echo json_encode(array('message' => 'Project not deleted', 'status' => 404));
+            http_response_code($this->project->message["status"]);
+            echo json_encode(array('message' => $this->project->message["message"], 'status' => $this->project->message["status"]));
         }
     }
 }

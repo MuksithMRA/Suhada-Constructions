@@ -1,16 +1,19 @@
 <?php
-    class Project{
+    class Vehicle{
 
         // DB stuff
         private $conn;
-        private $table = 'projects';
+        private $table = 'vehicles';
         public $message = array();
 
-        // Project Properties
-        public $id;
-        public $project_name;
-        public $category;
-        public $location;
+        // Vehicle Properties
+        public $vehicle_no;
+        public $vehicle_class;
+        public $vehicle_owner;
+        public $model;
+        public $license_issued;
+        public $license_expiry;
+        public $license_number;
         public $doc;
         public $created;
 
@@ -19,44 +22,56 @@
             $this->conn = $db;
         }
 
-        // Get Projects
-        public function getProjects(){
+        // Get Vehicles
+        public function getVehicles(){
                 $query = 'SELECT * FROM '.$this->table;
                 $stmt = $this->conn->prepare($query);
                 $stmt->execute();
                 $result = $stmt->get_result();
                 if($result->num_rows > 0){
-                    $projects = array();
+                    $vehicles = array();
                     while($row = $result->fetch_assoc()){
-                        $this->id = $row['id'];
-                        $this->project_name = $row['project_name'];
-                        $this->category = $row['category'];
-                        $this->location = $row['location'];
+                        $this->vehicle_no = $row['vehicle_no'];
+                        $this->vehicle_class = $row['vehicle_class'];
+                        $this->vehicle_owner = $row['vehicle_owner'];
+                        $this->model = $row['model'];
+                        $this->license_expiry = $row['license_expiry'];
+                        $this->license_issued = $row['license_issued'];
+                        $this->license_number = $row['license_number'];
                         $this->doc = $row['doc'];
                         $this->created = $row['created'];
-                        $project = $this->toArray();
-                        array_push($projects, $project);
+                        $vehicle = $this->toArray();
+                        array_push($vehicles, $vehicle);
                     }
                     $stmt->close();
                     
                     $this->message = array('message' => 'success', 'status' => 200);
-                    return $project;
+                    return $vehicle;
                 }
                 $stmt->close();
-                $this->message = array('message' => 'Projects not found', 'status' => 404);
+                $this->message = array('message' => 'Vehicles not found', 'status' => 404);
                 return false;     
         }
 
-        // Create Project
-        public function createProject(){
-            $query = 'INSERT INTO '.$this->table.'(project_name,category,location,doc) VALUES (?,?,?,?)';
+        // Create Vehicle
+        public function createVehicle(){
+            var_dump($this->toArray());
+            $query = 'INSERT INTO '.$this->table.'(vehicle_no,vehicle_class,vehicle_owner,model,license_expiry,license_issued,license_number,doc) VALUES (?,?,?,?,?,?,?,?)';
             $stmt = $this->conn->prepare($query);
-            $stmt->bind_param('ssss', $this->project_name, $this->category, $this->location,$this->doc);
+            $stmt->bind_param('ssssssis',
+                $this->vehicle_no,
+                $this->vehicle_class,
+                $this->vehicle_owner,
+                $this->model,
+                $this->license_expiry,
+                $this->license_issued,
+                $this->license_number,
+                $this->doc
+            );
             if($stmt->execute()){
-                $this->id = $stmt->insert_id;
                 $this->created = date('Y-m-d H:i:s');
                 $stmt->close();
-                $this->message = array('message' => 'Project Created Successfully !', 'status' => 201);
+                $this->message = array('message' => 'Vehicle Created Successfully !', 'status' => 201);
                 return true;
             }
             $stmt->close();
@@ -64,39 +79,51 @@
             return false;
         }
 
-        //get single project
-        public function getProject($id){
-            $query = 'SELECT * FROM '.$this->table.' WHERE id = ?';
+        //get single vehicle
+        public function getVehicle($vehicle_no){
+            $query = 'SELECT * FROM '.$this->table.' WHERE vehicle_no = ?';
             $stmt = $this->conn->prepare($query);
-            $stmt->bind_param('i', $id);
+            $stmt->bind_param('i', $vehicle_no);
             $stmt->execute();
             $result = $stmt->get_result();
             if($result->num_rows > 0){
                 $row = $result->fetch_assoc();
                 $stmt->close();
-                $this->id = $row['id'];
-                $this->project_name = $row['project_name'];
-                $this->category = $row['category'];
-                $this->location = $row['location'];
+                $this->vehicle_no = $row['vehicle_no'];
+                $this->vehicle_class = $row['vehicle_class'];
+                $this->vehicle_owner = $row['vehicle_owner'];
+                $this->model = $row['model'];
+                $this->license_expiry = $row['license_expiry'];
+                $this->license_issued = $row['license_issued'];
+                $this->license_number = $row['license_number'];
                 $this->doc = $row['doc'];
                 $this->created = $row['created'];
                 $this->message = array('message' => 'success', 'status' => 200);
                 return $this->toArray();
             }
             $stmt->close();
-            $this->message = array('message' => 'project not found', 'status' => 404);
+            $this->message = array('message' => 'vehicle not found', 'status' => 404);
             return false;
         }
 
 
-        // Update Project
-        public function updateProject($id){
-            $query = 'UPDATE '.$this->table.' SET project_name = ?, category = ?, location = ?, doc = ? WHERE id = ?';
+        // Update Vehicle
+        public function updateVehicle($vehicle_no){
+            $query = 'UPDATE '.$this->table.' SET vehicle_class = ?, vehicle_owner = ?, model = ?, license_expiry = ?, license_issued = ?, license_number = ? , doc = ? WHERE vehicle_no = ?';
             $stmt = $this->conn->prepare($query);
-            $stmt->bind_param('ssssi', $this->project_name, $this->category, $this->location, $this->doc, $id);
+            $stmt->bind_param('sssssisi',
+             $this->vehicle_class, 
+             $this->vehicle_owner, 
+             $this->model, 
+             $this->license_expiry,
+             $this->license_issued,
+             $this->license_number,
+             $this->doc, 
+             $vehicle_no
+            );
             if($stmt->execute()){
                 $stmt->close();
-                $this->message = array('message' => 'Project Updated Successfully !', 'status' => 200);
+                $this->message = array('message' => 'Vehicle Updated Successfully !', 'status' => 200);
                 return true;
             }
             $stmt->close();
@@ -104,15 +131,19 @@
             return false;
         }
 
-        // Delete Project
-        public function deleteProject($id){
-            $query = 'DELETE FROM '.$this->table.' WHERE id = ?';
+        // Delete Vehicle
+        public function deleteVehicle($vehicle_no){
+            if($this->getVehicle($vehicle_no) == false){
+                $this->message = array('message' => 'No vehicle associated with this id', 'status' => 404);
+                return false;
+            }
+            $query = 'DELETE FROM '.$this->table.' WHERE vehicle_no = ?';
             $stmt = $this->conn->prepare($query);
-            $stmt->bind_param('i', $id);
+            $stmt->bind_param('i', $vehicle_no);
             
             if($stmt->execute()){
                 $stmt->close();
-                $this->message = array('message' => 'Project Deleted Successfully !', 'status' => 200);
+                $this->message = array('message' => 'Vehicle Deleted Successfully !', 'status' => 200);
                 return true;
             }
             $stmt->close();
@@ -123,10 +154,13 @@
         // Convert to array
         public function toArray(){
             return array(
-                'id' => $this->id,
-                'project_name' => $this->project_name,
-                'category' => $this->category,
-                'location' => $this->location,
+                'vehicle_no' => $this->vehicle_no,
+                'vehicle_class' => $this->vehicle_class,
+                'vehicle_owner' => $this->vehicle_owner,
+                'model' => $this->model,
+                'license_expiry' => $this->license_expiry,
+                'license_issued' => $this->license_issued,
+                'license_number' => $this->license_number,
                 'doc' => $this->doc,
                 'created' => $this->created
             );

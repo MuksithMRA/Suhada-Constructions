@@ -1,31 +1,31 @@
 <?php
 
-class EmployeeController{
-    private $employee;
+class FinanceController{
+    private $finance;
 
-    public function __construct($employee) {
-        $this->employee = $employee;
+    public function __construct($finance) {
+        $this->finance = $finance;
     }
 
-    public function employee($method , $id)
+    public function finance($method , $id)
     {
         switch ($method) {
             case 'GET':
                 if($id == null){
-                    $this->getEmployees();
+                    $this->getFinances();
                 }else{
-                    $this->getEmployee($id);
+                    $this->getFinance($id);
                 }
                 break;
             case 'POST':
-                $this->createEmployee();
+                $this->createFinance();
                 break;
             case 'PUT':
-                $this->updateEmployee();
+                $this->updateFinance();
                 break;
             case 'DELETE':
                 if($id != null){
-                    $this->deleteEmployee($id);
+                    $this->deleteFinance($id);
                     break;
                 }   
             default:
@@ -35,100 +35,100 @@ class EmployeeController{
         }
     }
 
-    //get single employee
-    public function getEmployee($id)
+    //get single finance
+    public function getFinance($id)
     {
-        $employeeData = $this->employee->getEmployee($id);
-        if($employeeData != false){
-            echo json_encode(array($employeeData , "response"=>$this->employee->message));
+        $financeData = $this->finance->getFinance($id);
+        if($financeData != false){
+            echo json_encode(array($financeData , "response"=>$this->finance->message));
         }else{
             http_response_code(404);
-            echo json_encode(array('response' => $this->employee->message));
+            echo json_encode(array('response' => $this->finance->message));
         }
     }
 
-    //update employee
-    public function updateEmployee(){
+    //update finance
+    public function updateFinance(){
         $data = json_decode(file_get_contents("php://input"));
         if($data->id == null){
             http_response_code(404);
-            echo json_encode(array('response' => 'Employee id is required'));
+            echo json_encode(array('response' => 'Finance id is required'));
             die;
         }
-        $this->employee->getEmployee($data->id);
-        $this->employee->id = $data->id;
-        if(isset($data->name)){
-            $this->employee->name = $data->name;
+        $this->finance->getFinance($data->id);
+        $this->finance->id = $data->id;
+        if(isset($data->expense_name)){
+            $this->finance->expense_name = $data->expense_name;
         }
-        if(isset($data->designation)){
-            $this->employee->designation = $data->designation;
+        if(isset($data->expense_type)){
+            $this->finance->expense_type = $data->expense_type;
         }
-        if(isset($data->contact)){
-            $this->employee->contact = $data->contact;
+        if(isset($data->amount)){
+            $this->finance->amount = $data->amount;
         }
         if(isset($data->doc)){
-            $this->employee->doc = $data->doc;
+            $this->finance->doc = $data->doc;
         }
 
-        if($this->employee->updateEmployee($data->id)){
+        if($this->finance->updateFinance($data->id)){
             http_response_code(200);
             echo json_encode(array(
-                'message' => 'Employee updated successfully',
-                'employee'=>$this->employee->toArray(), 
+                'message' => 'Finance updated successfully',
+                'finance'=>$this->finance->toArray(), 
                 'status' => 200
             ));
         }else{
             http_response_code(404);
-            echo json_encode(array('message' => 'Employee not updated', 'status' => 404));
+            echo json_encode(array('message' => 'Finance not updated', 'status' => 404));
         }
     }
 
-    //get all employees
-    public function getEmployees()
+    //get all finances
+    public function getFinances()
     {
-        $employeeData = $this->employee->getEmployees();
-        if($employeeData != false){
-            echo json_encode(array($employeeData , "response"=>$this->employee->message));
+        $financeData = $this->finance->getFinances();
+        if($financeData != false){
+            echo json_encode(array($financeData , "response"=>$this->finance->message));
         }else{
             http_response_code(404);
-            echo json_encode(array('response' => $this->employee->message));
+            echo json_encode(array('response' => $this->finance->message));
         }
 
     }
 
-    //create employee
-    public function createEmployee()
+    //create finance
+    public function createFinance()
     {
         $data = json_decode(file_get_contents("php://input"));
-        if($data->name == null){
+        if($data->expense_name == null){
             http_response_code(404);
-            echo json_encode(array('response' => 'Employee data is required'));
+            echo json_encode(array('response' => 'Finance data is required'));
             die;
         }
-        $this->employee->name = $data->name;
-        $this->employee->designation = $data->designation;
-        $this->employee->contact = $data->contact;
-        $this->employee->doc = $data->doc;
-        if($this->employee->createEmployee()){
+        $this->finance->expense_name = $data->expense_name;
+        $this->finance->expense_type = $data->expense_type;
+        $this->finance->amount = $data->amount;
+        $this->finance->doc = $data->doc;
+        if($this->finance->createFinance()){
             echo json_encode(array(
-                'response' => $this->employee->message,
-                'employee' => $this->employee->toArray()
+                'response' => $this->finance->message,
+                'finance' => $this->finance->toArray()
             ));
         }else{
-            http_response_code($this->employee->message['status']);
-            echo json_encode(array("response"=>$this->employee->message));
+            http_response_code($this->finance->message['status']);
+            echo json_encode(array("response"=>$this->finance->message));
         }
     }
 
-    //delete employee
-    public function deleteEmployee($id)
+    //delete finance
+    public function deleteFinance($id)
     {
-        if($this->employee->deleteEmployee($id)){
+        if($this->finance->deleteFinance($id)){
             http_response_code(200);
-            echo json_encode(array('message' => 'Employee deleted successfully', 'status' => 200));
+            echo json_encode(array('message' => 'Finance deleted successfully', 'status' => 200));
         }else{
-            http_response_code(404);
-            echo json_encode(array('message' => 'Employee not deleted', 'status' => 404));
+            http_response_code($this->finance->message["status"]);
+            echo json_encode(array('message' => $this->finance->message["message"], 'status' => $this->finance->message["status"]));
         }
     }
 }
