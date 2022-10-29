@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suhada Construction</title>
     <script type="module">
-        import { MyLocalStorage } from '/app/assets/js/services/storage_keys.js';
+        import { StorageKeys } from '/app/assets/js/utils/storage_keys.js';
 
         if (localStorage.getItem(StorageKeys.TOKEN) == null) {
             window.location.href = '/app/login.html';
