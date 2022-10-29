@@ -26,7 +26,7 @@
                 $stmt->execute();
                 $result = $stmt->get_result();
                 if($result->num_rows > 0){
-                    $projects = array();
+                    $projects = [];
                     while($row = $result->fetch_assoc()){
                         $this->id = $row['id'];
                         $this->project_name = $row['project_name'];
@@ -35,12 +35,12 @@
                         $this->doc = $row['doc'];
                         $this->created = $row['created'];
                         $project = $this->toArray();
-                        array_push($projects, $project);
+                        $projects[]= $project;
                     }
                     $stmt->close();
                     
                     $this->message = array('message' => 'success', 'status' => 200);
-                    return $project;
+                    return $projects;
                 }
                 $stmt->close();
                 $this->message = array('message' => 'Projects not found', 'status' => 404);

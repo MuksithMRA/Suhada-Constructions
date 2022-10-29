@@ -40,7 +40,7 @@ class VehicleController{
     {
         $vehicleData = $this->vehicle->getVehicle($vehicle_no);
         if($vehicleData != false){
-            echo json_encode(array($vehicleData , "response"=>$this->vehicle->message));
+            echo json_encode(array("vehicle"=>$vehicleData , "response"=>$this->vehicle->message));
         }else{
             http_response_code(404);
             echo json_encode(array('response' => $this->vehicle->message));
@@ -97,7 +97,7 @@ class VehicleController{
     {
         $vehicleData = $this->vehicle->getVehicles();
         if($vehicleData != false){
-            echo json_encode(array($vehicleData , "response"=>$this->vehicle->message));
+            echo json_encode(array("vehicles"=>$vehicleData , "response"=>$this->vehicle->message));
         }else{
             http_response_code(404);
             echo json_encode(array('response' => $this->vehicle->message));

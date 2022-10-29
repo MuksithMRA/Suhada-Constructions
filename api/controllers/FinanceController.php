@@ -88,7 +88,7 @@ class FinanceController{
     {
         $financeData = $this->finance->getFinances();
         if($financeData != false){
-            echo json_encode(array($financeData , "response"=>$this->finance->message));
+            echo json_encode(array("finances"=>$financeData , "response"=>$this->finance->message));
         }else{
             http_response_code(404);
             echo json_encode(array('response' => $this->finance->message));

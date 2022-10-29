@@ -1,9 +1,9 @@
 import { Enviorment } from "/app/assets/js/env.js";
-import { Employee } from "/app/assets/js/models/employee.js";
+import { Vehicle } from "/app/assets/js/models/vehicle.js";
 
-export class EmployeeService {
-  static async getEmployees() {
-    return await fetch(Enviorment.API_URL + "/employees", {
+export class VehicleService {
+  static async getAllVehicle() {
+    return await fetch(Enviorment.API_URL + "/vehicles", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -14,11 +14,11 @@ export class EmployeeService {
       })
       .then((data) => {
         if (data["response"]["status"] == 200) {
-          let employees = [];
-          data["employees"].forEach((employee) => {
-            employees.push(Employee.fromJSON(employee));
+          let vehicles = [];
+          data["vehicles"].forEach((vehicle) => {
+            vehicles.push(Vehicle.fromJSON(vehicle));
           });
-          return employees;
+          return vehicles;
         }
         return [];
       });

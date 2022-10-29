@@ -26,7 +26,7 @@
                 $stmt->execute();
                 $result = $stmt->get_result();
                 if($result->num_rows > 0){
-                    $finances = array();
+                    $finances = [];
                     while($row = $result->fetch_assoc()){
                         $this->id = $row['id'];
                         $this->expense_name = $row['expense_name'];
@@ -35,12 +35,12 @@
                         $this->doc = $row['doc'];
                         $this->created = $row['created'];
                         $finance = $this->toArray();
-                        array_push($finances, $finance);
+                        $finances[] =  $finance;
                     }
                     $stmt->close();
                     
                     $this->message = array('message' => 'success', 'status' => 200);
-                    return $finance;
+                    return $finances;
                 }
                 $stmt->close();
                 $this->message = array('message' => 'Finances not found', 'status' => 404);

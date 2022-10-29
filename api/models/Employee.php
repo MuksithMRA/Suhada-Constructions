@@ -26,7 +26,7 @@
                 $stmt->execute();
                 $result = $stmt->get_result();
                 if($result->num_rows > 0){
-                    $employees = array();
+                    $employees = [];
                     while($row = $result->fetch_assoc()){
                         $this->id = $row['id'];
                         $this->name = $row['name'];
@@ -35,12 +35,12 @@
                         $this->doc = $row['doc'];
                         $this->created = $row['created'];
                         $employee = $this->toArray();
-                        array_push($employees, $employee);
+                        $employees[] = $employee;
                     }
                     $stmt->close();
                     
                     $this->message = array('message' => 'success', 'status' => 200);
-                    return $employee;
+                    return $employees;
                 }
                 $stmt->close();
                 $this->message = array('message' => 'Employees not found', 'status' => 404);

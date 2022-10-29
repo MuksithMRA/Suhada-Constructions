@@ -88,7 +88,7 @@ class EmployeeController{
     {
         $employeeData = $this->employee->getEmployees();
         if($employeeData != false){
-            echo json_encode(array($employeeData , "response"=>$this->employee->message));
+            echo json_encode(array("employees"=>$employeeData , "response"=>$this->employee->message));
         }else{
             http_response_code(404);
             echo json_encode(array('response' => $this->employee->message));

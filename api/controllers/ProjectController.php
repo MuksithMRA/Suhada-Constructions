@@ -88,7 +88,7 @@ class ProjectController{
     {
         $projectData = $this->project->getProjects();
         if($projectData != false){
-            echo json_encode(array($projectData , "response"=>$this->project->message));
+            echo json_encode(array("projects"=>$projectData , "response"=>$this->project->message));
         }else{
             http_response_code(404);
             echo json_encode(array('response' => $this->project->message));

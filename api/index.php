@@ -56,6 +56,11 @@ $path = $parts[2];
             $controller = new FinanceController($finance);
             $controller->finance($_SERVER['REQUEST_METHOD'],isset($parts[3]) ? $parts[3] : null);
             break;
+        case 'dashboardData':
+            $dashboard = new Dashboard($db);
+            $controller = new DashboardController($dashboard);
+            $controller->getDataCount($_SERVER['REQUEST_METHOD']);
+            break;
         default:
             http_response_code(404);
             echo json_encode(array('status'=>404 , 'message' => 'Page not found'));

@@ -29,7 +29,7 @@
                 $stmt->execute();
                 $result = $stmt->get_result();
                 if($result->num_rows > 0){
-                    $vehicles = array();
+                    $vehicles = [];
                     while($row = $result->fetch_assoc()){
                         $this->vehicle_no = $row['vehicle_no'];
                         $this->vehicle_class = $row['vehicle_class'];
@@ -41,12 +41,12 @@
                         $this->doc = $row['doc'];
                         $this->created = $row['created'];
                         $vehicle = $this->toArray();
-                        array_push($vehicles, $vehicle);
+                        $vehicles[] =  $vehicle;
                     }
                     $stmt->close();
                     
                     $this->message = array('message' => 'success', 'status' => 200);
-                    return $vehicle;
+                    return $vehicles;
                 }
                 $stmt->close();
                 $this->message = array('message' => 'Vehicles not found', 'status' => 404);
