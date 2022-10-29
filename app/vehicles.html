@@ -75,9 +75,11 @@
                                 <div class="col d-xl-flex align-items-xl-center">
                                     <p class="text-primary m-0 fw-bold">Vehicles Info</p>
                                 </div>
-                                <div class="col d-xl-flex justify-content-xl-end"><button class="btn btn-primary btn-sm"
-                                        type="button">Add New Vehicle<i class="fas fa-plus-circle"
-                                            style="margin-left: 5px;"></i></button></div>
+                                <div class="col d-xl-flex justify-content-xl-end">
+                                    <button class="btn btn-primary btn-sm" type="button" id="add-vehicle">
+                                        Add New Vehicle<i class="fas fa-plus-circle" style="margin-left: 5px;"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -114,7 +116,7 @@
             </footer>
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="vehicle-manage-model">
+    <div class="modal fade" role="dialog" tabindex="-1" id="vehicle-manage-modal">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <form>
@@ -164,11 +166,12 @@
     <script src="/app/assets/js/script.min.js" type="module"></script>
     <script type="module">
         import { VehicleService } from '/app/assets/js/services/vehicle_service.js';
-        let row = document.createElement('tr');
-        row.classList.add('text-center');
-        row.innerHTML = '';
+        let tbody = document.querySelector('tbody');
+        tbody.innerHTML = '';
         VehicleService.getAllVehicle().then((vehicle) => {
             vehicle.forEach((vehicle) => {
+                let row = document.createElement('tr');
+                row.classList.add('text-center');
                 row.innerHTML += `
                     <td>${vehicle.vehicle_no}</td>
                     <td>${vehicle.vehicle_class}</td>
@@ -190,8 +193,22 @@
                                     style="margin-left: 5px;"></i></button></div>
                     </td>
                 `;
-                document.querySelector('tbody').appendChild(row);
+                tbody.appendChild(row);
+                row.children[5].addEventListener('click', () => {
+                    window.open(vehicle.doc);
+                });
+                row.children[6].children[0].children[0].addEventListener('click', () => {
+                    vehicle.updateVehicle(vehicle);
+                });
+                row.children[6].children[0].children[1].addEventListener('click', () => {
+                    vehicle.deleteVehicle();
+                });
             });
+        });
+
+        $("#add-vehicle").click(function () {
+            $("#vehicle-manage-modal").modal('show');
+            
         });
     </script>
 </body>

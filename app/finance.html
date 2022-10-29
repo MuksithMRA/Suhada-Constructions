@@ -75,9 +75,11 @@
                                 <div class="col d-xl-flex align-items-xl-center">
                                     <p class="text-primary m-0 fw-bold">Finance Info</p>
                                 </div>
-                                <div class="col d-xl-flex justify-content-xl-end"><button class="btn btn-primary btn-sm"
-                                        type="button">Create New Finance<i class="fas fa-plus-circle"
-                                            style="margin-left: 5px;"></i></button></div>
+                                <div class="col d-xl-flex justify-content-xl-end">
+                                    <button class="btn btn-primary btn-sm" type="button" id="new-finance">
+                                        Create New Finance<i class="fas fa-plus-circle" style="margin-left: 5px;"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -115,7 +117,7 @@
     </div>
 
     <!---finance-manage-model-->
-    <div class="modal fade" role="dialog" tabindex="-1" id="finance-manage-model">
+    <div class="modal fade" role="dialog" tabindex="-1" id="finance-manage-modal">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <form>
@@ -157,19 +159,20 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/app/assets/js/script.min.js" type="module"></script>
     <script type="module">
+
         import { FinanceService } from '/app/assets/js/services/finance_service.js';
-        let row = document.createElement('tr');
-        row.classList.add('text-center');
-        row.innerHTML = '';
         FinanceService.getAllFinance().then((finance) => {
-            console.log(finance);
+            const tbody = document.querySelector('#finance-table tbody');
+            tbody.innerHTML = '';
             finance.forEach((finance) => {
+                let row = document.createElement('tr');
+                row.classList.add('text-center');
                 row.innerHTML += `
                 <td>${finance.id}</td>
                 <td>${finance.expense_name}</td>
                 <td>${finance.expense_type}</td>
                 <td>${finance.amount}</td>
-                <td role="button" onclick= "downloadDoc()">
+                <td role="button">
                     <i class="fas fa-download"></i>
                 </td>
                 <td>
@@ -184,8 +187,21 @@
                                 style="margin-left: 5px;"></i></button></div>
                 </td>
                 `;
-                document.querySelector('#finance-table tbody').appendChild(row);
+                tbody.appendChild(row);
+                row.children[4].addEventListener('click', () => {
+                    window.open(finance.doc);
+                });
+                row.children[5].children[0].children[0].addEventListener('click', () => {
+                    finance.updateFinance(finance);
+                });
+                row.children[5].children[0].children[1].addEventListener('click', () => {
+                    finance.deleteFinance();
+                });
             });
+        });
+
+        $("#new-finance").click(function () {
+            $("#finance-manage-modal").modal('show');
         });
     </script>
 </body>

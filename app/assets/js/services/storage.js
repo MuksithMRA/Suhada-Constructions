@@ -1,8 +1,8 @@
-import { Enviorment } from "/app/env.js";
+import { Enviorment } from "/app/assets/js/env.js";
 
 export class Storage {
   static async uploadFile(formData) {
-    return await fetch(Enviorment.HOST + "/app/upload_file.php", {
+    return await fetch(Enviorment.APP + "/upload_file.php", {
       method: "POST",
       body: formData,
     })

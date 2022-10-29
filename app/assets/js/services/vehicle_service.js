@@ -16,7 +16,7 @@ export class VehicleService {
         if (data["response"]["status"] == 200) {
           let vehicles = [];
           data["vehicles"].forEach((vehicle) => {
-            vehicles.push(Vehicle.fromJSON(vehicle));
+            projects.push(Vehicle.fromJSON(vehicle));
           });
           return vehicles;
         }

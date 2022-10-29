@@ -75,9 +75,11 @@
                                 <div class="col d-xl-flex align-items-xl-center">
                                     <p class="text-primary m-0 fw-bold">Employee Info</p>
                                 </div>
-                                <div class="col d-xl-flex justify-content-xl-end"><button class="btn btn-primary btn-sm"
-                                        type="button">Add New Emplyee<i class="fas fa-user-plus"
-                                            style="margin-left: 5px;"></i></button></div>
+                                <div class="col d-xl-flex justify-content-xl-end">
+                                    <button class="btn btn-primary btn-sm" type="button" id="add-employee">
+                                        Add New Emplyee <i class="fas fa-user-plus" style="margin-left: 5px;"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -113,41 +115,60 @@
             </footer>
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="employee-manage-model">
+    <div class="modal fade" role="dialog" tabindex="-1" id="employee-manage-modal">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form>
+                <form id="add-employee-form">
                     <div class="modal-header">
                         <h4 class="modal-title" style="font-weight: bold;">Add Employee</h4><button type="button"
                             class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div id="showAlert"></div>
                         <div class="card">
                             <div class="card-header d-xxl-flex" style="height: 40px;">
                                 <p>Employee Info</p>
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-6"><label class="col-form-label">&nbsp;Id<input class="form-control"
-                                                type="text" required="" readonly="" name="emp_id"></label></div>
-                                    <div class="col-6"><label class="col-form-label">&nbsp;Name<input
-                                                class="form-control" type="text" required="" name="emp_name"></label>
+                                    <div class="col-6">
+                                        <label class="col-form-label">
+                                            &nbsp;Id<input class="form-control" type="text" required="" readonly=""
+                                                name="emp_id">
+                                        </label>
                                     </div>
-                                    <div class="col-6"><label class="col-form-label">&nbsp;Designation<input
-                                                class="form-control" type="text" required=""
-                                                name="emp_designation"></label></div>
-                                    <div class="col-6"><label class="col-form-label">Contact<input class="form-control"
-                                                type="text" required="" name="emp_contact"></label></div>
-                                    <div class="col-6"><label class="col-form-label">Upload Document<input
-                                                class="form-control" type="file" required="" name="emp_doc"></label>
+                                    <div class="col-6">
+                                        <label class="col-form-label">
+                                            &nbsp;Name<input class="form-control" type="text" required=""
+                                                name="emp_name">
+                                        </label>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="col-form-label">
+                                            &nbsp;Designation<input class="form-control" type="text" required=""
+                                                name="emp_designation">
+                                        </label>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="col-form-label">
+                                            Contact<input class="form-control" type="text" required=""
+                                                name="emp_contact">
+                                        </label>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="col-form-label">
+                                            Upload Document<input class="form-control" type="file" required=""
+                                                name="emp_doc">
+                                        </label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer"><button class="btn btn-light" type="button"
-                            data-bs-dismiss="modal">Close</button><button class="btn btn-primary"
-                            type="button">Save</button></div>
+                    <div class="modal-footer"><button class="btn btn-light" type="reset"
+                            data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" type="submit">Save</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -156,35 +177,65 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/app/assets/js/script.min.js" type="module"></script>
     <script type="module">
-       
+        let last_id;
         import { EmployeeService } from '/app/assets/js/services/employee_service.js';
         EmployeeService.getEmployees().then((employees) => {
-            let row = document.createElement('tr');
-            row.classList.add('text-center');
-            row.innerHTML = '';
+            last_id = employees[employees.length - 1].id;
+            const tbody = document.querySelector('#dataTable tbody');
+            tbody.innerHTML = '';
             employees.forEach((employee) => {
-                row.innerHTML = `
+                let row = document.createElement('tr');
+                row.classList.add('text-center');
+                row.innerHTML += `
                     <td>${employee.id}</td>
                     <td>${employee.name}</td>
                     <td>${employee.designation}</td>
                     <td>${employee.contact}</td>
-                    <td role="button" onclick= "downloadDoc()">
+                    <td role="button">
                         <i class="fas fa-download"></i>
                     </td>
                     <td>
-                        <div class="btn-group" role="group" style="border-style: none;"><button
-                                class="btn btn-primary btn-sm" type="button"
-                                style="background: var(--bs-green);border-style: none;">Update<i
-                                    class="fas fa-user-edit"
-                                    style="margin-left: 5px;"></i></button><button
-                                class="btn btn-primary btn-sm" type="button"
-                                style="background: var(--bs-red);border-style: none;">Delete<i
-                                    class="far fa-trash-alt"
-                                    style="margin-left: 5px;"></i></button></div>
+                        <div class="btn-group" role="group" style="border-style: none;">
+                            <button class="btn btn-primary btn-sm" type="button" style="background: var(--bs-green);border-style: none;">
+                                Update<i class="fas fa-user-edit" style="margin-left: 5px;"></i>
+                            </button>
+                            <button class="btn btn-primary btn-sm" type="button" style="background: var(--bs-red);border-style: none;">
+                                Delete<i class="far fa-trash-alt" style="margin-left: 5px;"></i>
+                            </button>
+                        </div>
                     </td>
                 `;
-                document.querySelector('#dataTable tbody').appendChild(row);
-                console.log(row.children);
+                tbody.appendChild(row);
+                row.children[4].addEventListener('click', () => {
+                    window.open(employee.doc);
+                });
+                row.children[5].children[0].children[0].addEventListener('click', () => {
+                    employee.updateEmployee(employee);
+                });
+                row.children[5].children[0].children[1].addEventListener('click', () => {
+                    employee.deleteEmployee();
+                });
+
+            });
+        });
+
+        //add employee
+        $("#add-employee").click(function () {
+            $("#employee-manage-modal").modal('show');
+            const form = document.querySelector("#add-employee-form");
+            form["emp_id"].value = Number(last_id) + 1;
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let formdata = new FormData();
+                formdata.append('file', form["emp_doc"].files[0]);
+                const emp = {
+                    name: form["emp_name"].value,
+                    designation: form["emp_designation"].value,
+                    contact: form["emp_contact"].value,
+                    doc: formdata
+                };
+                EmployeeService.addEmployee(document.getElementById("showAlert"), emp).then((data) => console.log(data));
+
             });
         });
     </script>

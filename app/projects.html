@@ -75,9 +75,11 @@
                                 <div class="col d-xl-flex align-items-xl-center">
                                     <p class="text-primary m-0 fw-bold">Projects Info</p>
                                 </div>
-                                <div class="col d-xl-flex justify-content-xl-end"><button class="btn btn-primary btn-sm"
-                                        type="button">Add New Project<i class="fas fa-plus-circle"
-                                            style="margin-left: 5px;"></i></button></div>
+                                <div class="col d-xl-flex justify-content-xl-end">
+                                    <button class="btn btn-primary btn-sm" type="button" id="add-project">
+                                        Add New Project<i class="fas fa-plus-circle" style="margin-left: 5px;"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -115,7 +117,7 @@
     </div>
 
     <!----projects-manage-model-->
-    <div class="modal fade" role="dialog" tabindex="-1" id="project-manage-model">
+    <div class="modal fade" role="dialog" tabindex="-1" id="project-manage-modal">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <form>
@@ -156,17 +158,18 @@
     <script src="/app/assets/js/script.min.js" type="module"></script>
     <script type="module">
         import { ProjectService } from '/app/assets/js/services/project_service.js';
-        let row = document.createElement('tr');
-        row.classList.add('text-center');
-        row.innerHTML = '';
+        let tbody = document.querySelector('tbody');
+        tbody.innerHTML = '';
         ProjectService.getAllProject().then((project) => {
             project.forEach((project) => {
+                let row = document.createElement('tr');
+                row.classList.add('text-center');
                 row.innerHTML += `
                 <td>${project.id}</td>
                 <td>${project.project_name}</td>
                 <td>${project.category}</td>
                 <td>${project.location}</td>
-                <td role="button" onclick= "downloadDoc()">
+                <td role="button">
                     <i class="fas fa-download"></i>
                 </td>
                 <td>
@@ -181,10 +184,22 @@
                                 style="margin-left: 5px;"></i></button></div>
                 </td>
                 `;
-
-                document.querySelector('tbody').appendChild(row);
+                tbody.appendChild(row);
+                row.children[4].addEventListener('click', () => {
+                    window.open(project.doc);
+                });
+                row.children[5].children[0].children[0].addEventListener('click', () => {
+                    project.updateProject(project);
+                });
+                row.children[5].children[0].children[1].addEventListener('click', () => {
+                    project.deleteProject();
+                });
             });
 
+        });
+
+        $("#add-project").click(function () {
+            $("#project-manage-modal").modal('show');
         });
     </script>
 </body>
