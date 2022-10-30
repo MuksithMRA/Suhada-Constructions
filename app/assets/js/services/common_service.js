@@ -49,4 +49,26 @@ export class CommonService {
       }
     });
   }
+
+  static async update(parent, dataObject) {
+    console.log(JSON.stringify(dataObject));
+    return await fetch(Enviorment.API_URL + "/" + dataObject.table, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dataObject),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data["response"]["status"] == 200) {
+          Util.showAlert(parent, data["response"]["message"], "success");
+          return true;
+        }
+        Util.showAlert(parent, data["response"]["message"], "error");
+        return false;
+      });
+  }
 }

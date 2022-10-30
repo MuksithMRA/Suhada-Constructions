@@ -143,8 +143,8 @@
                                                 required></label></div>
                                     <div class="col-6"><label class="col-form-label">Location<input class="form-control"
                                                 type="text" name="project_location" required></label></div>
-                                    <div class="col-6"><label class="col-form-label">Upload Document<input
-                                                class="form-control" type="file" name="project_document"
+                                    <div class="col-6" id="doc_column"><label class="col-form-label">Upload
+                                            Document<input class="form-control" type="file" name="project_document"
                                                 required></label></div>
                                 </div>
                             </div>
@@ -164,6 +164,8 @@
         import { ProjectService } from '/app/assets/js/services/project_service.js';
         let last_id;
         let tbody = document.querySelector('tbody');
+        const form = document.querySelector("#add-project-form");
+        const showAlert = document.getElementById("showAlert");
         tbody.innerHTML = '';
         ProjectService.getAllProject().then((projects) => {
             last_id = projects[projects.length - 1].id;
@@ -195,7 +197,21 @@
                     window.open(project.doc);
                 });
                 row.children[5].children[0].children[0].addEventListener('click', () => {
-                    project.updateProject(project);
+                    $('#project-manage-modal').modal('show');
+                    $('#project-manage-modal .modal-title').text('Update Project');
+                    $('#project-manage-modal').find('input[name="project_id"]').val(project.id);
+                    $('#project-manage-modal').find('input[name="project_name"]').val(project.project_name);
+                    $('#project-manage-modal').find('input[name="project_category"]').val(project.category);
+                    $('#project-manage-modal').find('input[name="project_location"]').val(project.location);
+                    $('#project-manage-modal').find('#doc_column').remove();
+
+                    form.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        project.project_name = $('#project-manage-modal').find('input[name="project_project_name"]').val();
+                        project.category = $('#project-manage-modal').find('input[name="project_category"]').val();
+                        project.location = $('#project-manage-modal').find('input[name="project_location"]').val();
+                        project.updateProject(showAlert);
+                    });
                 });
                 row.children[5].children[0].children[1].addEventListener('click', () => {
                     project.deleteProject();
@@ -206,7 +222,7 @@
 
         $("#add-project").click(function () {
             $("#project-manage-modal").modal('show');
-            const form = document.querySelector("#add-project-form");
+
             form.reset();
             form["project_id"].value = Number(last_id) + 1;
             form.addEventListener('submit', (e) => {
@@ -220,7 +236,7 @@
                     doc: formdata,
                     table: "projects"
                 };
-                ProjectService.addProject(document.getElementById("showAlert"), proj);
+                ProjectService.addProject(showAlert, proj);
             });
         });
     </script>

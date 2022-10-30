@@ -146,8 +146,8 @@
                                     <div class="col-6"><label class="col-form-label">Amount (LKR)<input
                                                 class="form-control" type="text" name="finance_amount" required></label>
                                     </div>
-                                    <div class="col-6"><label class="col-form-label">Upload Document<input
-                                                class="form-control" type="file" name="finance_document"
+                                    <div class="col-6" id="doc_column"><label class="col-form-label">Upload
+                                            Document<input class="form-control" type="file" name="finance_document"
                                                 required></label></div>
                                 </div>
                             </div>
@@ -166,10 +166,15 @@
     <script type="module">
 
         import { FinanceService } from '/app/assets/js/services/finance_service.js';
+        const form = document.querySelector("#add-finance-form");
+        const showAlert = document.getElementById("showAlert");
         let last_id;
+
+
         FinanceService.getAllFinance().then((finance) => {
             const tbody = document.querySelector('#finance-table tbody');
             last_id = finance[finance.length - 1].id;
+
             tbody.innerHTML = '';
             finance.forEach((finance) => {
                 let row = document.createElement('tr');
@@ -199,7 +204,21 @@
                     window.open(finance.doc);
                 });
                 row.children[5].children[0].children[0].addEventListener('click', () => {
-                    finance.updateFinance(finance);
+                    $('#finance-manage-modal').modal('show');
+                    $('#finance-manage-modal .modal-title').text('Update Finance');
+                    $('#finance-manage-modal').find('input[name="finance_id"]').val(finance.id);
+                    $('#finance-manage-modal').find('input[name="finance_expense_name"]').val(finance.expense_name);
+                    $('#finance-manage-modal').find('input[name="finance_expense_type"]').val(finance.expense_type);
+                    $('#finance-manage-modal').find('input[name="finance_amount"]').val(finance.amount);
+                    $('#finance-manage-modal').find('#doc_column').remove();
+
+                    form.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        finance.expense_name = $('#finance-manage-modal').find('input[name="finance_expense_name"]').val();
+                        finance.expense_type = $('#finance-manage-modal').find('input[name="finance_expense_type"]').val();
+                        finance.amount = $('#finance-manage-modal').find('input[name="finance_amount"]').val();
+                        finance.updateFinance(showAlert);
+                    });
                 });
                 row.children[5].children[0].children[1].addEventListener('click', () => {
                     finance.deleteFinance();
@@ -209,7 +228,7 @@
 
         $("#new-finance").click(function () {
             $("#finance-manage-modal").modal('show');
-            const form = document.querySelector("#add-finance-form");
+
             form.reset();
             form["finance_id"].value = Number(last_id) + 1;
             form.addEventListener('submit', (e) => {

@@ -6,6 +6,7 @@ export class Project {
   location = "";
   doc = "";
   created = "";
+  table = "projects";
 
   constructor(id, project_name, category, location, doc, created) {
     this.id = id;
@@ -46,11 +47,9 @@ export class Project {
     console.log(res);
   }
 
-  updateProject() {
-    console.log("update");
-  }
-
-  addProject(modal) {
-    $(modal).modal("show");
+  updateProject(parent) {
+    let res = CommonService.update(parent, this).then((res) => {
+      return res;
+    });
   }
 }

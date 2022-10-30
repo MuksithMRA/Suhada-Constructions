@@ -143,19 +143,20 @@
                                     </div>
                                     <div class="col-6"><label class="col-form-label">Model<input class="form-control"
                                                 type="text" name="vehicle_model" required></label></div>
-                                    <div class="col-6"><label class="col-form-label">License issued Date<br><input
-                                                class="form-control" type="date" name="vehicle_license_issued"
-                                                required></label>
+                                    <div class="col-6" id="issue_date_column"><label class="col-form-label">License
+                                            issued
+                                            Date<br><input class="form-control" type="date"
+                                                name="vehicle_license_issued" required></label>
                                     </div>
-                                    <div class="col-6"><label class="col-form-label">License Expiry Date<input
-                                                class="form-control" type="date" name="vehicle_license_expiry"
+                                    <div class="col-6" id="ex_date_column"><label class="col-form-label">License Expiry
+                                            Date<input class="form-control" type="date" name="vehicle_license_expiry"
                                                 required></label>
                                     </div>
                                     <div class="col-6"><label class="col-form-label">License Number<input
                                                 class="form-control" type="text" name="vehicle_license_number"
                                                 required></label>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-6" id="doc_column">
                                         <label class="col-form-label">Upload Document
                                             <input class="form-control" type="file" name="vehicle_document"
                                                 required></label>
@@ -177,6 +178,8 @@
     <script type="module">
         import { VehicleService } from '/app/assets/js/services/vehicle_service.js';
         let tbody = document.querySelector('tbody');
+        const form = document.querySelector("#add-vehicle-form");
+        const showAlert = document.querySelector("#showAlert");
         tbody.innerHTML = '';
         let last_id;
         VehicleService.getAllVehicle().then((vehicles) => {
@@ -210,7 +213,29 @@
                     window.open(vehicle.doc);
                 });
                 row.children[6].children[0].children[0].addEventListener('click', () => {
-                    vehicle.updateVehicle(vehicle);
+                    $('#vehicle-manage-modal').modal('show');
+                    $('#vehicle-manage-modal .modal-title').text('Update Vehicle');
+                    $('#vehicle-manage-modal').find('input[name="vehicle_no"]').val(vehicle.vehicle_no);
+                    $('#vehicle-manage-modal').find('input[name="vehicle_no"]').attr('readonly', true);
+                    $('#vehicle-manage-modal').find('input[name="vehicle_class"]').val(vehicle.vehicle_class);
+                    $('#vehicle-manage-modal').find('input[name="vehicle_owner"]').val(vehicle.vehicle_owner);
+                    $('#vehicle-manage-modal').find('input[name="vehicle_model"]').val(vehicle.model);
+                    console.log(new Date(vehicle.license_issued.substring(0, 10)));
+                    $('#vehicle-manage-modal').find('input[name="vehicle_license_number"]').val(vehicle.license_number);
+                    $('#vehicle-manage-modal').find('#doc_column').remove();
+                    $('#vehicle-manage-modal').find('#issue_date_column').remove();
+                    $('#vehicle-manage-modal').find('#ex_date_column').remove();
+
+                    form.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        vehicle.vehicle_class = $('#vehicle-manage-modal').find('input[name="vehicle_class"]').val();
+                        vehicle.vehicle_owner = $('#vehicle-manage-modal').find('input[name="vehicle_owner"]').val();
+                        vehicle.model = $('#vehicle-manage-modal').find('input[name="vehicle_model"]').val();
+                        //vehicle.license_issued = $('#vehicle-manage-modal').find('input[name="vehicle_license_issued"]').val();
+                        //vehicle.license_expiry = $('#vehicle-manage-modal').find('input[name="vehicle_license_expiry"]').val();
+                        vehicle.license_number = $('#vehicle-manage-modal').find('input[name="vehicle_license_number"]').val();
+                        vehicle.updateVehicle(showAlert);
+                    });
                 });
                 row.children[6].children[0].children[1].addEventListener('click', () => {
                     vehicle.deleteVehicle();
@@ -220,7 +245,7 @@
 
         $("#add-vehicle").click(function () {
             $("#vehicle-manage-modal").modal('show');
-            const form = document.querySelector("#add-vehicle-form");
+
             form.reset();
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -237,7 +262,7 @@
                     doc: formdata,
                     table: "vehicles"
                 };
-                VehicleService.addVehicle(document.getElementById("showAlert"), vehi);
+                VehicleService.addVehicle(showAlert, vehi);
             });
         });
     </script>

@@ -69,18 +69,10 @@ class FinanceController{
         if(isset($data->doc)){
             $this->finance->doc = $data->doc;
         }
-
-        if($this->finance->updateFinance($data->id)){
-            http_response_code(200);
-            echo json_encode(array(
-                'message' => 'Finance updated successfully',
-                'finance'=>$this->finance->toArray(), 
-                'status' => 200
-            ));
-        }else{
-            http_response_code(404);
-            echo json_encode(array('message' => 'Finance not updated', 'status' => 404));
-        }
+        $this->finance->updateFinance($data->id);
+        http_response_code($this->finance->message["status"]);
+        echo json_encode(array('response' => $this->finance->message));
+        
     }
 
     //get all finances

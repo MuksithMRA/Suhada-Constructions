@@ -10,6 +10,7 @@ export class Vehicle {
   license_number = 0;
   doc = "";
   created = "";
+  table = "vehicles";
 
   constructor(
     vehicle_no,
@@ -67,7 +68,9 @@ export class Vehicle {
     });
   }
 
-  updateVehicle() {
-    console.log("update");
+  updateVehicle(parent) {
+    let res = CommonService.update(parent, this).then((res) => {
+      return res;
+    });
   }
 }

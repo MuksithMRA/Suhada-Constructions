@@ -8,6 +8,7 @@ export class Employee {
   contact = "";
   doc = "";
   created = "";
+  table = "employees";
 
   constructor(id, name, designation, contact, doc, created) {
     this.id = id;
@@ -47,11 +48,9 @@ export class Employee {
 
     console.log(res);
   }
-  updateEmployee() {
-    console.log("update");
-  }
-
-  addEmployee(modal) {
-    $(modal).modal("show");
+  updateEmployee(parent) {
+    let res = CommonService.update(parent, this).then((res) => {
+      return res;
+    });
   }
 }

@@ -7,6 +7,7 @@ export class Finance {
   amount = 0;
   doc = "";
   created = "";
+  table = "finance";
 
   constructor(id, expense_name, expense_type, amount, doc, created) {
     this.id = id;
@@ -47,11 +48,9 @@ export class Finance {
     console.log(res);
   }
 
-  updateFinance() {
-    console.log("update");
-  }
-
-  addFinance(modal) {
-    $(modal).modal("show");
+  updateFinance(parent) {
+    let res = CommonService.update(parent, this).then((res) => {
+      return res;
+    });
   }
 }

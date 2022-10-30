@@ -79,17 +79,9 @@ class VehicleController{
             $this->vehicle->doc = $data->doc;
         }
 
-        if($this->vehicle->updateVehicle($data->vehicle_no)){
-            http_response_code(200);
-            echo json_encode(array(
-                'message' => 'Vehicle updated successfully',
-                'vehicle'=>$this->vehicle->toArray(), 
-                'status' => 200
-            ));
-        }else{
-            http_response_code(404);
-            echo json_encode(array('message' => 'Vehicle not updated', 'status' => 404));
-        }
+        $this->vehicle->updateVehicle($data->vehicle_no);
+        http_response_code($this->vehicle->message["status"]);
+        echo json_encode(array('response' => $this->vehicle->message));
     }
 
     //get all vehicles
@@ -124,8 +116,8 @@ class VehicleController{
         $this->vehicle->doc = $data->doc;
 
         if($this->vehicle->getVehicle($data->vehicle_no) != false){
-            http_response_code(401);
-            echo json_encode(array('message' => 'Vehicle already exists', 'status' => 409));
+            http_response_code(409);
+            echo json_encode(array("response"=>array('message' => 'Vehicle already exists', 'status' => 409)));
             die;
         }
         if($this->vehicle->createVehicle()){

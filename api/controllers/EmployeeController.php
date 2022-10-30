@@ -70,17 +70,10 @@ class EmployeeController{
             $this->employee->doc = $data->doc;
         }
 
-        if($this->employee->updateEmployee($data->id)){
-            http_response_code(200);
-            echo json_encode(array(
-                'message' => 'Employee updated successfully',
-                'employee'=>$this->employee->toArray(), 
-                'status' => 200
-            ));
-        }else{
-            http_response_code(404);
-            echo json_encode(array('message' => 'Employee not updated', 'status' => 404));
-        }
+        $this->employee->updateEmployee($data->id);
+        http_response_code($this->employee->message["status"]);
+        echo json_encode(array('response' => $this->employee->message));
+        
     }
 
     //get all employees

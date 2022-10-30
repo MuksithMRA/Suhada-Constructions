@@ -70,17 +70,10 @@ class ProjectController{
             $this->project->doc = $data->doc;
         }
 
-        if($this->project->updateProject($data->id)){
-            http_response_code(200);
-            echo json_encode(array(
-                'message' => 'Project updated successfully',
-                'project'=>$this->project->toArray(), 
-                'status' => 200
-            ));
-        }else{
-            http_response_code(404);
-            echo json_encode(array('message' => 'Project not updated', 'status' => 404));
-        }
+        $this->project->updateProject($data->id);
+        http_response_code($this->project->message["status"]);
+        echo json_encode(array('response' => $this->project->message));
+        
     }
 
     //get all projects
