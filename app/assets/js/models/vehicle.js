@@ -65,10 +65,7 @@ export class Vehicle {
     let res = CommonService.delete(this.vehicle_no, "vehicles").then((res) => {
       return res;
     });
-
-    console.log(res);
   }
-  3;
 
   updateVehicle() {
     console.log("update");

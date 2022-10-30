@@ -119,12 +119,13 @@
     <div class="modal fade" role="dialog" tabindex="-1" id="vehicle-manage-modal">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form>
+                <form id="add-vehicle-form">
                     <div class="modal-header">
                         <h4 class="modal-title" style="font-weight: bold;">Add New Vehicle</h4><button type="button"
                             class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div id="showAlert"></div>
                         <div class="card">
                             <div class="card-header d-xxl-flex" style="height: 40px;">
                                 <p>Vehicle Info</p>
@@ -132,31 +133,40 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-6"><label class="col-form-label">&nbsp;Vehicle No<input
-                                                class="form-control" type="text" name="vehicle_no"></label></div>
+                                                class="form-control" type="text" name="vehicle_no" required></label>
+                                    </div>
                                     <div class="col-6"><label class="col-form-label">&nbsp;Vehicle Class<input
-                                                class="form-control" type="text" name="vehicle_class"></label></div>
+                                                class="form-control" type="text" name="vehicle_class" required></label>
+                                    </div>
                                     <div class="col-6"><label class="col-form-label">Owner of Vehicle<br><input
-                                                class="form-control" type="text" name="vehicle_owner"></label></div>
+                                                class="form-control" type="text" name="vehicle_owner" required></label>
+                                    </div>
                                     <div class="col-6"><label class="col-form-label">Model<input class="form-control"
-                                                type="text" name="vehicle_model"></label></div>
+                                                type="text" name="vehicle_model" required></label></div>
                                     <div class="col-6"><label class="col-form-label">License issued Date<br><input
-                                                class="form-control" type="text" name="vehicle_license_issued"></label>
+                                                class="form-control" type="date" name="vehicle_license_issued"
+                                                required></label>
                                     </div>
                                     <div class="col-6"><label class="col-form-label">License Expiry Date<input
-                                                class="form-control" type="text" name="vehicle_license_expired"></label>
+                                                class="form-control" type="date" name="vehicle_license_expiry"
+                                                required></label>
                                     </div>
                                     <div class="col-6"><label class="col-form-label">License Number<input
-                                                class="form-control" type="text" name="vehicle_license_number"></label>
+                                                class="form-control" type="text" name="vehicle_license_number"
+                                                required></label>
                                     </div>
-                                    <div class="col-6"><label class="col-form-label">Upload Document<input
-                                                class="form-control" type="file" name="vehicle_document"></label></div>
+                                    <div class="col-6">
+                                        <label class="col-form-label">Upload Document
+                                            <input class="form-control" type="file" name="vehicle_document"
+                                                required></label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer"><button class="btn btn-light" type="button"
+                    <div class="modal-footer"><button class="btn btn-light" type="reset"
                             data-bs-dismiss="modal">Close</button><button class="btn btn-primary"
-                            type="button">Save</button></div>
+                            type="submit">Save</button></div>
                 </form>
             </div>
         </div>
@@ -168,8 +178,10 @@
         import { VehicleService } from '/app/assets/js/services/vehicle_service.js';
         let tbody = document.querySelector('tbody');
         tbody.innerHTML = '';
-        VehicleService.getAllVehicle().then((vehicle) => {
-            vehicle.forEach((vehicle) => {
+        let last_id;
+        VehicleService.getAllVehicle().then((vehicles) => {
+            last_id = vehicles[vehicles.length - 1].id;
+            vehicles.forEach((vehicle) => {
                 let row = document.createElement('tr');
                 row.classList.add('text-center');
                 row.innerHTML += `
@@ -178,7 +190,7 @@
                     <td>${vehicle.vehicle_owner}</td>
                     <td>${vehicle.model}</td>
                     <td>${vehicle.license_number}</td>
-                    <td role="button" onclick= "downloadDoc()">
+                    <td role="button">
                         <i class="fas fa-download"></i>
                     </td>
                     <td>
@@ -208,7 +220,25 @@
 
         $("#add-vehicle").click(function () {
             $("#vehicle-manage-modal").modal('show');
-            
+            const form = document.querySelector("#add-vehicle-form");
+            form.reset();
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let formdata = new FormData();
+                formdata.append('file', form["vehicle_document"].files[0]);
+                const vehi = {
+                    vehicle_no: form["vehicle_no"].value,
+                    vehicle_class: form["vehicle_class"].value,
+                    vehicle_owner: form["vehicle_owner"].value,
+                    model: form["vehicle_model"].value,
+                    license_issued: form["vehicle_license_issued"].value,
+                    license_expiry: form["vehicle_license_expiry"].value,
+                    license_number: Number(form["vehicle_license_number"].value),
+                    doc: formdata,
+                    table: "vehicles"
+                };
+                VehicleService.addVehicle(document.getElementById("showAlert"), vehi);
+            });
         });
     </script>
 </body>

@@ -120,12 +120,13 @@
     <div class="modal fade" role="dialog" tabindex="-1" id="project-manage-modal">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form>
+                <form id="add-project-form">
                     <div class="modal-header">
                         <h4 class="modal-title" style="font-weight: bold;">Add New Project</h4><button type="button"
                             class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div id="showAlert"></div>
                         <div class="card">
                             <div class="card-header d-xxl-flex" style="height: 40px;">
                                 <p>Project Info</p>
@@ -133,22 +134,25 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-6"><label class="col-form-label">&nbsp;Id<input class="form-control"
-                                                type="text" name="project_id"></label></div>
+                                                type="text" name="project_id" readonly></label></div>
                                     <div class="col-6"><label class="col-form-label">&nbsp;Project Name<input
-                                                class="form-control" type="text" name="project_name"></label></div>
+                                                class="form-control" type="text" name="project_name" required></label>
+                                    </div>
                                     <div class="col-6"><label class="col-form-label">Category<br><input
-                                                class="form-control" type="text" name="project_category"></label></div>
+                                                class="form-control" type="text" name="project_category"
+                                                required></label></div>
                                     <div class="col-6"><label class="col-form-label">Location<input class="form-control"
-                                                type="text" name="project_location"></label></div>
+                                                type="text" name="project_location" required></label></div>
                                     <div class="col-6"><label class="col-form-label">Upload Document<input
-                                                class="form-control" type="file" name="project_document"></label></div>
+                                                class="form-control" type="file" name="project_document"
+                                                required></label></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer"><button class="btn btn-light" type="button"
+                    <div class="modal-footer"><button class="btn btn-light" type="reset"
                             data-bs-dismiss="modal">Close</button><button class="btn btn-primary"
-                            type="button">Save</button></div>
+                            type="submit">Save</button></div>
                 </form>
             </div>
         </div>
@@ -158,10 +162,12 @@
     <script src="/app/assets/js/script.min.js" type="module"></script>
     <script type="module">
         import { ProjectService } from '/app/assets/js/services/project_service.js';
+        let last_id;
         let tbody = document.querySelector('tbody');
         tbody.innerHTML = '';
-        ProjectService.getAllProject().then((project) => {
-            project.forEach((project) => {
+        ProjectService.getAllProject().then((projects) => {
+            last_id = projects[projects.length - 1].id;
+            projects.forEach((project) => {
                 let row = document.createElement('tr');
                 row.classList.add('text-center');
                 row.innerHTML += `
@@ -200,6 +206,22 @@
 
         $("#add-project").click(function () {
             $("#project-manage-modal").modal('show');
+            const form = document.querySelector("#add-project-form");
+            form.reset();
+            form["project_id"].value = Number(last_id) + 1;
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let formdata = new FormData();
+                formdata.append('file', form["project_document"].files[0]);
+                const proj = {
+                    project_name: form["project_name"].value,
+                    category: form["project_category"].value,
+                    location: form["project_location"].value,
+                    doc: formdata,
+                    table: "projects"
+                };
+                ProjectService.addProject(document.getElementById("showAlert"), proj);
+            });
         });
     </script>
 </body>

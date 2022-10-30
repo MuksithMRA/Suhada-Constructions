@@ -1,5 +1,6 @@
 import { Enviorment } from "/app/assets/js/env.js";
 import { Vehicle } from "/app/assets/js/models/vehicle.js";
+import { CommonService } from "/app/assets/js/services/common_service.js";
 
 export class VehicleService {
   static async getAllVehicle() {
@@ -22,5 +23,9 @@ export class VehicleService {
         }
         return [];
       });
+  }
+
+  static async addVehicle(parent, vehicle) {
+    CommonService.add(parent, vehicle);
   }
 }

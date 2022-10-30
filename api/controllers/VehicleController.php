@@ -125,7 +125,7 @@ class VehicleController{
 
         if($this->vehicle->getVehicle($data->vehicle_no) != false){
             http_response_code(401);
-            echo json_encode(array('response' => 'Vehicle already exists','status' => 401));
+            echo json_encode(array('message' => 'Vehicle already exists', 'status' => 409));
             die;
         }
         if($this->vehicle->createVehicle()){

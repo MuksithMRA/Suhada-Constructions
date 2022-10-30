@@ -55,7 +55,6 @@
 
         // Create Vehicle
         public function createVehicle(){
-            var_dump($this->toArray());
             $query = 'INSERT INTO '.$this->table.'(vehicle_no,vehicle_class,vehicle_owner,model,license_expiry,license_issued,license_number,doc) VALUES (?,?,?,?,?,?,?,?)';
             $stmt = $this->conn->prepare($query);
             $stmt->bind_param('ssssssis',

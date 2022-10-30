@@ -1,5 +1,6 @@
 import { Enviorment } from "/app/assets/js/env.js";
 import { Project } from "/app/assets/js/models/project.js";
+import { CommonService } from "/app/assets/js/services/common_service.js";
 
 export class ProjectService {
   static async getAllProject() {
@@ -22,5 +23,9 @@ export class ProjectService {
         }
         return [];
       });
+  }
+
+  static async addProject(parent, project) {
+    CommonService.add(parent, project);
   }
 }

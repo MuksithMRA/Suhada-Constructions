@@ -223,6 +223,7 @@
         $("#add-employee").click(function () {
             $("#employee-manage-modal").modal('show');
             const form = document.querySelector("#add-employee-form");
+            form.reset();
             form["emp_id"].value = Number(last_id) + 1;
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -232,9 +233,10 @@
                     name: form["emp_name"].value,
                     designation: form["emp_designation"].value,
                     contact: form["emp_contact"].value,
-                    doc: formdata
+                    doc: formdata,
+                    table: 'employees'
                 };
-                EmployeeService.addEmployee(document.getElementById("showAlert"), emp).then((data) => console.log(data));
+                EmployeeService.addEmployee(document.getElementById("showAlert"), emp);
 
             });
         });
