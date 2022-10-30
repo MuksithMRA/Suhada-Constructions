@@ -24,7 +24,7 @@ export class CommonService {
   static async add(parent, dataObject) {
     return await Storage.uploadFile(dataObject.doc).then(async (data) => {
       if (data["status"] == 200) {
-        dataObject.doc = Enviorment.API_URL + "/docs/" + data["file_name"];
+        dataObject.doc = Enviorment.HOST + "/docs/" + data["file_name"];
         return await fetch(Enviorment.API_URL + "/" + dataObject.table, {
           method: "POST",
           headers: {
