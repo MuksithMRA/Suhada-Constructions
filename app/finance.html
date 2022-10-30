@@ -120,12 +120,13 @@
     <div class="modal fade" role="dialog" tabindex="-1" id="finance-manage-modal">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form>
+                <form id="add-finance-form">
                     <div class="modal-header">
                         <h4 class="modal-title" style="font-weight: bold;">Create New Finance</h4><button type="button"
                             class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div id="showAlert"></div>
                         <div class="card">
                             <div class="card-header d-xxl-flex" style="height: 40px;">
                                 <p>Finance Info</p>
@@ -133,24 +134,28 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-6"><label class="col-form-label">&nbsp;Id<input class="form-control"
-                                                type="text" name="finance_id"></label></div>
+                                                type="text" name="finance_id" required readonly></label></div>
                                     <div class="col-6"><label class="col-form-label">&nbsp;Expense Name<input
-                                                class="form-control" type="text" name="finance_expense_name"></label>
+                                                class="form-control" type="text" name="finance_expense_name"
+                                                required></label>
                                     </div>
                                     <div class="col-6"><label class="col-form-label">Expense Type<br><input
-                                                class="form-control" type="text" name="finance_expense_type"></label>
+                                                class="form-control" type="text" name="finance_expense_type"
+                                                required></label>
                                     </div>
                                     <div class="col-6"><label class="col-form-label">Amount (LKR)<input
-                                                class="form-control" type="text" name="finance_amount"></label></div>
+                                                class="form-control" type="text" name="finance_amount" required></label>
+                                    </div>
                                     <div class="col-6"><label class="col-form-label">Upload Document<input
-                                                class="form-control" type="file" name="finance_document"></label></div>
+                                                class="form-control" type="file" name="finance_document"
+                                                required></label></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer"><button class="btn btn-light" type="button"
                             data-bs-dismiss="modal">Close</button><button class="btn btn-primary"
-                            type="button">Save</button></div>
+                            type="submit">Save</button></div>
                 </form>
             </div>
         </div>
@@ -161,8 +166,10 @@
     <script type="module">
 
         import { FinanceService } from '/app/assets/js/services/finance_service.js';
+        let last_id;
         FinanceService.getAllFinance().then((finance) => {
             const tbody = document.querySelector('#finance-table tbody');
+            last_id = finance[finance.length - 1].id;
             tbody.innerHTML = '';
             finance.forEach((finance) => {
                 let row = document.createElement('tr');
@@ -202,6 +209,20 @@
 
         $("#new-finance").click(function () {
             $("#finance-manage-modal").modal('show');
+            const form = document.querySelector("#add-finance-form");
+            form["finance_id"].value = Number(last_id) + 1;
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let formdata = new FormData();
+                formdata.append('file', form["finance_document"].files[0]);
+                const fin = {
+                    expense_name: form["finance_expense_name"].value,
+                    expense_type: form["finance_expense_type"].value,
+                    amount: form["finance_amount"].value,
+                    doc: formdata
+                };
+                FinanceService.addFinance(document.getElementById("showAlert"), fin).then((data) => console.log(data));
+            });
         });
     </script>
 </body>

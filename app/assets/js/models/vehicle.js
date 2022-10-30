@@ -1,3 +1,5 @@
+import { CommonService } from "/app/assets/js/services/common_service.js";
+
 export class Vehicle {
   vehicle_no = "";
   vehicle_class = "";
@@ -65,11 +67,10 @@ export class Vehicle {
     });
 
     console.log(res);
-  }3
+  }
+  3;
 
   updateVehicle() {
     console.log("update");
   }
-
-  
 }

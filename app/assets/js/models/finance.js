@@ -1,3 +1,5 @@
+import { CommonService } from "/app/assets/js/services/common_service.js";
+
 export class Finance {
   id = 0;
   expense_name = "";

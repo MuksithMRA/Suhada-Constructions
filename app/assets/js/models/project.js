@@ -1,3 +1,4 @@
+import { CommonService } from "/app/assets/js/services/common_service.js";
 export class Project {
   id = 0;
   project_name = "";
