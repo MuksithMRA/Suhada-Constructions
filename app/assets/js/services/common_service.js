@@ -51,7 +51,6 @@ export class CommonService {
   }
 
   static async update(parent, dataObject) {
-    console.log(JSON.stringify(dataObject));
     return await fetch(Enviorment.API_URL + "/" + dataObject.table, {
       method: "PUT",
       headers: {

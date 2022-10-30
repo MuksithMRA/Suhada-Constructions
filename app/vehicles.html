@@ -234,7 +234,18 @@
                         //vehicle.license_issued = $('#vehicle-manage-modal').find('input[name="vehicle_license_issued"]').val();
                         //vehicle.license_expiry = $('#vehicle-manage-modal').find('input[name="vehicle_license_expiry"]').val();
                         vehicle.license_number = $('#vehicle-manage-modal').find('input[name="vehicle_license_number"]').val();
-                        vehicle.updateVehicle(showAlert);
+                        vehicle.updateVehicle(showAlert).then((res) => {
+                            console.log(res);
+                            if (res) {
+                                setTimeout(() => {
+                                    $("#vehicle-manage-modal").modal('hide');
+                                }, 2000);
+
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1000);
+                            }
+                        });
                     });
                 });
                 row.children[6].children[0].children[1].addEventListener('click', () => {
@@ -273,7 +284,7 @@
                             location.reload();
                         }, 1000);
                     }
-                })
+                });
             });
         });
     </script>

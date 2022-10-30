@@ -48,10 +48,14 @@ export class Employee {
       }
     });
   }
-  
+
   updateEmployee(parent) {
-    let res = CommonService.update(parent, this).then((res) => {
-      return res;
-    });
+    return CommonService.update(parent, this)
+      .then((res) => {
+        return res;
+      })
+      .then((res) => {
+        return res;
+      });
   }
 }

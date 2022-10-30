@@ -48,7 +48,11 @@ export class Project {
   }
 
   updateProject(parent) {
-    let res = CommonService.update(parent, this).then((res) => {
+    return CommonService.update(parent, this)
+    .then((res) => {
+      return res;
+    })
+    .then((res) => {
       return res;
     });
   }

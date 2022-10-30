@@ -225,7 +225,17 @@
                         employee.name = $('#employee-manage-modal').find('input[name="emp_name"]').val();
                         employee.designation = $('#employee-manage-modal').find('input[name="emp_designation"]').val();
                         employee.contact = $('#employee-manage-modal').find('input[name="emp_contact"]').val();
-                        employee.updateEmployee(showAlert);
+                        employee.updateEmployee(showAlert).then((res) => {
+                            if (res) {
+                                setTimeout(() => {
+                                    $("#employee-manage-modal").modal('hide');
+                                }, 2000);
+
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1000);
+                            }
+                        });
                     })
 
                 });

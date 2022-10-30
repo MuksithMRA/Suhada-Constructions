@@ -217,7 +217,17 @@
                         finance.expense_name = $('#finance-manage-modal').find('input[name="finance_expense_name"]').val();
                         finance.expense_type = $('#finance-manage-modal').find('input[name="finance_expense_type"]').val();
                         finance.amount = $('#finance-manage-modal').find('input[name="finance_amount"]').val();
-                        finance.updateFinance(showAlert);
+                        finance.updateFinance(showAlert).then((res) => {
+                            if (res) {
+                                setTimeout(() => {
+                                    $("#finance-manage-modal").modal('hide');
+                                }, 2000);
+
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1000);
+                            }
+                        });
                     });
                 });
                 row.children[5].children[0].children[1].addEventListener('click', () => {
@@ -243,7 +253,6 @@
                     table: "finance"
                 };
                 FinanceService.addFinance(document.getElementById("showAlert"), fin).then((res) => {
-                    console.log(res);
                     if (res) {
                         setTimeout(() => {
                             $("#finance-manage-modal").modal('hide');
@@ -253,7 +262,7 @@
                             location.reload();
                         }, 1000);
                     }
-                })
+                });
             });
         });
     </script>
