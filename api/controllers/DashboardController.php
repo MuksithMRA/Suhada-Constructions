@@ -10,8 +10,9 @@
         public function getDataCount(string $method):void{
             if($method == 'GET'){
                 $datacount = $this->dashboard->getTableRowCounts();
+                $increments = $this->dashboard->getIncrements();
                 if($datacount != false){
-                    echo json_encode(array("datacount"=>$datacount , "response"=>$this->dashboard->message));
+                    echo json_encode(array("datacount"=>$datacount ,"increments"=> $increments,  "response"=>$this->dashboard->message));
                 }else{
                     http_response_code($this->dashboard->message['status']);
                     echo json_encode(array("response"=>$this->dashboard->message));

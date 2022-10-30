@@ -12,7 +12,6 @@ export class DashboardService {
         return response.json();
       })
       .then((data) => {
-        
         return data;
       });
   }

@@ -162,6 +162,7 @@
     <script src="/app/assets/js/script.min.js" type="module"></script>
     <script type="module">
         import { ProjectService } from '/app/assets/js/services/project_service.js';
+        import { DashboardService } from '/app/assets/js/services/dashboard_service.js';
         let last_id;
         let tbody = document.querySelector('tbody');
         const form = document.querySelector("#add-project-form");
@@ -235,7 +236,9 @@
             $("#project-manage-modal").modal('show');
 
             form.reset();
-            form["project_id"].value = Number(last_id) + 1;
+            DashboardService.getDashboardData().then((data) => data).then((data) => {
+                form["project_id"].value = Number(data["increments"][1]["projects"]["AUTO_INCREMENT"]);
+            });
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 let formdata = new FormData();

@@ -166,6 +166,7 @@
     <script type="module">
 
         import { FinanceService } from '/app/assets/js/services/finance_service.js';
+        import { DashboardService } from '/app/assets/js/services/dashboard_service.js';
         const form = document.querySelector("#add-finance-form");
         const showAlert = document.getElementById("showAlert");
         let last_id;
@@ -240,7 +241,9 @@
             $("#finance-manage-modal").modal('show');
 
             form.reset();
-            form["finance_id"].value = Number(last_id) + 1;
+            DashboardService.getDashboardData().then((data) => data).then((data) => {
+                form["finance_id"].value = Number(data["increments"][2]["finance"]["AUTO_INCREMENT"]);
+            });
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 let formdata = new FormData();

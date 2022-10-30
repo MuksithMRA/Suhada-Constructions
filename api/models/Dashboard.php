@@ -3,6 +3,7 @@
         
         private $conn;
         private $db_name = 'suhada_constructions';
+        private $tables = array('employees','projects','finance');
         public $message;
       
         
@@ -31,6 +32,27 @@
                 $this->message = array('message' => 'no data found', 'status' => 404);
                 return false;
             }
+        }
+
+        public function getIncrements()
+        {
+           $query = "SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?";
+           $dataSet = [];
+           foreach ($this->tables as $table ) {
+                $stmt = $this->conn->prepare($query);
+                $stmt->bind_param('ss', $this->db_name, $table);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                if($result->num_rows > 0){
+                     $dataSet[] = array($table => $result->fetch_assoc());
+                }else{
+                     $stmt->close();
+                     $this->message = array('message' => 'no data found', 'status' => 404);
+                     return false;
+                }
+           }
+              $stmt->close();   
+              return $dataSet;
         }
     }
 

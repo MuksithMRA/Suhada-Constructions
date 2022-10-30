@@ -178,11 +178,12 @@
     <script src="/app/assets/js/script.min.js" type="module"></script>
     <script type="module">
         import { EmployeeService } from '/app/assets/js/services/employee_service.js';
+        import { DashboardService } from '/app/assets/js/services/dashboard_service.js';
         const showAlert = document.getElementById("showAlert");
         const form = document.querySelector("#add-employee-form");
-        let last_id;
+
         EmployeeService.getEmployees().then((employees) => {
-            last_id = employees[employees.length - 1].id;
+
             const tbody = document.querySelector('#dataTable tbody');
             tbody.innerHTML = '';
             employees.forEach((employee) => {
@@ -251,7 +252,10 @@
             $("#employee-manage-modal").modal('show');
 
             form.reset();
-            form["emp_id"].value = Number(last_id) + 1;
+            DashboardService.getDashboardData().then((data) => data).then((data) => {
+                form["emp_id"].value = Number(data["increments"][0]["employees"]["AUTO_INCREMENT"]);
+            });
+
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 let formdata = new FormData();
