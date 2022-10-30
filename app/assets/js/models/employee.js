@@ -42,12 +42,13 @@ export class Employee {
   }
 
   deleteEmployee() {
-    let res = CommonService.delete(this.id, "employees").then((res) => {
-      return res;
+    CommonService.delete(this.id, this.table).then((res) => {
+      if (res) {
+        location.reload();
+      }
     });
-
-    console.log(res);
   }
+  
   updateEmployee(parent) {
     let res = CommonService.update(parent, this).then((res) => {
       return res;

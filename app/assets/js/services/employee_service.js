@@ -44,6 +44,6 @@ export class EmployeeService {
   }
 
   static async addEmployee(parent, employee) {
-    CommonService.add(parent, employee);
+    return CommonService.add(parent, employee);
   }
 }

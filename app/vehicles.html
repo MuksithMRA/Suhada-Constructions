@@ -158,8 +158,8 @@
                                     </div>
                                     <div class="col-6" id="doc_column">
                                         <label class="col-form-label">Upload Document
-                                            <input class="form-control" type="file" name="vehicle_document"
-                                                required></label>
+                                            <input class="form-control" type="file" accept=".pdf"
+                                                name="vehicle_document" required></label>
                                     </div>
                                 </div>
                             </div>
@@ -262,7 +262,18 @@
                     doc: formdata,
                     table: "vehicles"
                 };
-                VehicleService.addVehicle(showAlert, vehi);
+                VehicleService.addVehicle(showAlert, vehi).then((res) => {
+                    console.log(res);
+                    if (res) {
+                        setTimeout(() => {
+                            $("#vehicle-manage-modal").modal('hide');
+                        }, 2000);
+
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    }
+                })
             });
         });
     </script>

@@ -26,6 +26,6 @@ export class VehicleService {
   }
 
   static async addVehicle(parent, vehicle) {
-    CommonService.add(parent, vehicle);
+    return CommonService.add(parent, vehicle);
   }
 }

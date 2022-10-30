@@ -144,8 +144,8 @@
                                     <div class="col-6"><label class="col-form-label">Location<input class="form-control"
                                                 type="text" name="project_location" required></label></div>
                                     <div class="col-6" id="doc_column"><label class="col-form-label">Upload
-                                            Document<input class="form-control" type="file" name="project_document"
-                                                required></label></div>
+                                            Document<input class="form-control" type="file" accept=".pdf"
+                                                name="project_document" required></label></div>
                                 </div>
                             </div>
                         </div>
@@ -236,7 +236,18 @@
                     doc: formdata,
                     table: "projects"
                 };
-                ProjectService.addProject(showAlert, proj);
+                ProjectService.addProject(showAlert, proj).then((res) => {
+                    console.log(res);
+                    if (res) {
+                        setTimeout(() => {
+                            $("#project-manage-modal").modal('hide');
+                        }, 2000);
+
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    }
+                })
             });
         });
     </script>

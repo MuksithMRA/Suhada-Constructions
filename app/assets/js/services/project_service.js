@@ -26,6 +26,6 @@ export class ProjectService {
   }
 
   static async addProject(parent, project) {
-    CommonService.add(parent, project);
+    return CommonService.add(parent, project);
   }
 }

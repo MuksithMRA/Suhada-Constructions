@@ -147,8 +147,8 @@
                                                 class="form-control" type="text" name="finance_amount" required></label>
                                     </div>
                                     <div class="col-6" id="doc_column"><label class="col-form-label">Upload
-                                            Document<input class="form-control" type="file" name="finance_document"
-                                                required></label></div>
+                                            Document<input class="form-control" type="file" accept=".pdf"
+                                                name="finance_document" required></label></div>
                                 </div>
                             </div>
                         </div>
@@ -242,7 +242,18 @@
                     doc: formdata,
                     table: "finance"
                 };
-                FinanceService.addFinance(document.getElementById("showAlert"), fin);
+                FinanceService.addFinance(document.getElementById("showAlert"), fin).then((res) => {
+                    console.log(res);
+                    if (res) {
+                        setTimeout(() => {
+                            $("#finance-manage-modal").modal('hide');
+                        }, 2000);
+
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    }
+                })
             });
         });
     </script>

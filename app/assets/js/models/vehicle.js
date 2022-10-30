@@ -63,8 +63,10 @@ export class Vehicle {
   }
 
   deleteVehicle() {
-    let res = CommonService.delete(this.vehicle_no, "vehicles").then((res) => {
-      return res;
+    CommonService.delete(this.vehicle_no, this.table).then((res) => {
+      if (res) {
+        location.reload();
+      }
     });
   }
 

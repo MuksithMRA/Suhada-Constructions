@@ -26,6 +26,6 @@ export class FinanceService {
   }
 
   static async addFinance(parent, finance) {
-    CommonService.add(parent, finance);
+    return CommonService.add(parent, finance);
   }
 }

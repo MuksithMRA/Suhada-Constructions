@@ -41,11 +41,11 @@ export class Finance {
   }
 
   deleteFinance() {
-    let res = CommonService.delete(this.id, "finance").then((res) => {
-      return res;
+    CommonService.delete(this.id, this.table).then((res) => {
+      if (res) {
+        location.reload();
+      }
     });
-
-    console.log(res);
   }
 
   updateFinance(parent) {

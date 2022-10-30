@@ -158,7 +158,7 @@
                                     <div class="col-6" id="doc_column">
                                         <label class="col-form-label">
                                             Upload Document<input class="form-control" type="file" required=""
-                                                name="emp_doc">
+                                                name="emp_doc" accept=".pdf">
                                         </label>
                                     </div>
                                 </div>
@@ -253,8 +253,17 @@
                     doc: formdata,
                     table: 'employees'
                 };
-                EmployeeService.addEmployee(showAlert, emp);
+                EmployeeService.addEmployee(showAlert, emp).then((res) => {
+                    if (res) {
+                        setTimeout(() => {
+                            $("#employee-manage-modal").modal('hide');
+                        }, 2000);
 
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    }
+                });
             });
         });
     </script>

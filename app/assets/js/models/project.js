@@ -40,11 +40,11 @@ export class Project {
   }
 
   deleteProject() {
-    let res = CommonService.delete(this.id, "projects").then((res) => {
-      return res;
+    CommonService.delete(this.id, this.table).then((res) => {
+      if (res) {
+        location.reload();
+      }
     });
-
-    console.log(res);
   }
 
   updateProject(parent) {
