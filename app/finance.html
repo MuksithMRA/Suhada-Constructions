@@ -169,12 +169,8 @@
         import { DashboardService } from '/app/assets/js/services/dashboard_service.js';
         const form = document.querySelector("#add-finance-form");
         const showAlert = document.getElementById("showAlert");
-        let last_id;
-
-
         FinanceService.getAllFinance().then((finance) => {
             const tbody = document.querySelector('#finance-table tbody');
-            last_id = finance[finance.length - 1].id;
 
             tbody.innerHTML = '';
             finance.forEach((finance) => {

@@ -163,13 +163,11 @@
     <script type="module">
         import { ProjectService } from '/app/assets/js/services/project_service.js';
         import { DashboardService } from '/app/assets/js/services/dashboard_service.js';
-        let last_id;
         let tbody = document.querySelector('tbody');
         const form = document.querySelector("#add-project-form");
         const showAlert = document.getElementById("showAlert");
         tbody.innerHTML = '';
         ProjectService.getAllProject().then((projects) => {
-            last_id = projects[projects.length - 1].id;
             projects.forEach((project) => {
                 let row = document.createElement('tr');
                 row.classList.add('text-center');
