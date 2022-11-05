@@ -76,6 +76,8 @@
                                     <p class="text-primary m-0 fw-bold">Vehicles Info</p>
                                 </div>
                                 <div class="col d-xl-flex justify-content-xl-end">
+                                    <input type="search" class="form-control w-50 border-0 me-3"
+                                        placeholder="Search Vehicle by Number" id="search">
                                     <button class="btn btn-primary btn-sm" type="button" id="add-vehicle">
                                         Add New Vehicle<i class="fas fa-plus-circle" style="margin-left: 5px;"></i>
                                     </button>
@@ -180,6 +182,26 @@
         let tbody = document.querySelector('tbody');
         const form = document.querySelector("#add-vehicle-form");
         const showAlert = document.querySelector("#showAlert");
+        document.getElementById("search").onkeyup = (e) => search(e);
+        function search(e) {
+            let search = e.target.value;
+            let table = document.getElementById("dataTable");
+            let tr = table.getElementsByTagName("tr");
+            for (var i = 0; i < tr.length; i++) {
+                let td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    let textValue = td.textContent || td.innerText;
+                    if (textValue.toLowerCase().indexOf(search.toLowerCase()) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+
+        }
+
+
         tbody.innerHTML = '';
         let last_id;
         VehicleService.getAllVehicle().then((vehicles) => {

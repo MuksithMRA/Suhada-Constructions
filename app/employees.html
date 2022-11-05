@@ -76,6 +76,8 @@
                                     <p class="text-primary m-0 fw-bold">Employee Info</p>
                                 </div>
                                 <div class="col d-xl-flex justify-content-xl-end">
+                                    <input type="search" class="form-control w-50 border-0 me-3"
+                                        placeholder="Search employee by name" id="search">
                                     <button class="btn btn-primary btn-sm" type="button" id="add-employee">
                                         Add New Emplyee <i class="fas fa-user-plus" style="margin-left: 5px;"></i>
                                     </button>
@@ -181,6 +183,25 @@
         import { DashboardService } from '/app/assets/js/services/dashboard_service.js';
         const showAlert = document.getElementById("showAlert");
         const form = document.querySelector("#add-employee-form");
+
+        //search employee
+        document.getElementById("search").onkeyup = (e) => search(e);
+        function search(e) {
+            let search = e.target.value;
+            let table = document.getElementById("dataTable");
+            let tr = table.getElementsByTagName("tr");
+            for (var i = 0; i < tr.length; i++) {
+                let td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    let textValue = td.textContent || td.innerText;
+                    if (textValue.toLowerCase().indexOf(search.toLowerCase()) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
 
         EmployeeService.getEmployees().then((employees) => {
 
