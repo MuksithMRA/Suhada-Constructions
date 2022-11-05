@@ -184,11 +184,12 @@
         import { DashboardService } from '/app/assets/js/services/dashboard_service.js';
 
         DashboardService.getDashboardData().then((data) => {
+            console.log(data);
             $(document).ready(() => {
-                $('#emp-count').text(data["datacount"][0]["table_rows"]);
-                $('#finance-count').text(data["datacount"][1]["table_rows"]);
-                $('#projects-count').text(data["datacount"][2]["table_rows"]);
-                $('#vehicles-count').text(data["datacount"][3]["table_rows"]);
+                $('#emp-count').text(data["datacount"]["employees"]);
+                $('#finance-count').text(data["datacount"]["projects"]);
+                $('#projects-count').text(data["datacount"]["finance"]);
+                $('#vehicles-count').text(data["datacount"]["vehicles"]);
             });
         });
     </script>

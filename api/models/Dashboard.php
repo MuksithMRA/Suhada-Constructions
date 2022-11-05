@@ -15,19 +15,20 @@
         public function getTableRowCounts()
         {
             $datacount = [];
+            $data = array();
             for ($i=0; $i < count($this->tables); $i++) { 
                 $query = "SELECT COUNT(*) FROM " . $this->tables[$i];
                 $stmt = $this->conn->prepare($query);
                 $stmt->execute();
                 $result = $stmt->get_result();
-                $data = array("table_name"=>$this->tables[$i],"table_rows"=>$result->field_count);
-                $datacount[] = $data;
+                $data += [$this->tables[$i]=>$result->field_count]; 
+               
             }
-          
-            if(count($datacount) > 0){
+         
+            if(count($data) > 0){
                 $stmt->close();
                 $this->message = array('message' => 'data found', 'status' => 200);
-                return $datacount;
+                return $data;
             }else{
                 $stmt->close();
                 $this->message = array('message' => 'no data found', 'status' => 404);
