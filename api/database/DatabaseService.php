@@ -1,6 +1,6 @@
 <?php 
     class DatabaseService {
-        private $host = "localhost";
+        private $host = "localhost:3306";
         private $db_name = "suhada_constructions";
         private $username = "root";
         private $password = "";

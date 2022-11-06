@@ -82,7 +82,7 @@
         public function getVehicle($vehicle_no){
             $query = 'SELECT * FROM '.$this->table.' WHERE vehicle_no = ?';
             $stmt = $this->conn->prepare($query);
-            $stmt->bind_param('i', $vehicle_no);
+            $stmt->bind_param('s', $vehicle_no);
             $stmt->execute();
             $result = $stmt->get_result();
             if($result->num_rows > 0){

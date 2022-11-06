@@ -115,7 +115,10 @@ class VehicleController{
         $this->vehicle->license_number = $data->license_number;
         $this->vehicle->doc = $data->doc;
 
-        if($this->vehicle->getVehicle($data->vehicle_no) != false){
+        $vehicleExist = $this->vehicle->getVehicle($data->vehicle_no);
+        
+        if($vehicleExist != false){
+           
             http_response_code(409);
             echo json_encode(array("response"=>array('message' => 'Vehicle already exists', 'status' => 409)));
             die;
