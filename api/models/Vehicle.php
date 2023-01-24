@@ -138,7 +138,7 @@
             }
             $query = 'DELETE FROM '.$this->table.' WHERE vehicle_no = ?';
             $stmt = $this->conn->prepare($query);
-            $stmt->bind_param('i', $vehicle_no);
+            $stmt->bind_param('s', $vehicle_no);
             
             if($stmt->execute()){
                 $stmt->close();
